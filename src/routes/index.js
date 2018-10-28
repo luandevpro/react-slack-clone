@@ -1,23 +1,36 @@
-import React from "react";
-import App from "../components/App";
-import Login from "../components/Auth/Login";
-import Resgister from "../components/Auth/Resgister";
+import React, { Suspense, lazy } from "react";
+
+const App = lazy(() => import("../components/App"));
+const Login = lazy(() => import("../components/Auth/Login"));
+const Resgister = lazy(() => import("../components/Auth/Resgister"));
 
 const routes = [
 	{
 		path: "/",
 		exact: true,
-		main: () => <App />,
+		main: () => (
+			<Suspense fallback={<div>loading...</div>}>
+				<App />
+			</Suspense>
+		),
 	},
 	{
 		path: "/login",
 		exact: false,
-		main: () => <Login />,
+		main: () => (
+			<Suspense fallback={<div>loading...</div>}>
+				<Login />
+			</Suspense>
+		),
 	},
 	{
 		path: "/resgister",
 		exact: false,
-		main: () => <Resgister />,
+		main: () => (
+			<Suspense fallback={<div>loading...</div>}>
+				<Resgister />
+			</Suspense>
+		),
 	},
 ];
 

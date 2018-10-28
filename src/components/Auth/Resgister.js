@@ -1,18 +1,25 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Formik } from "formik";
 import styled from "styled-components";
-import {
-	Grid,
-	Header,
-	Icon,
-	Form,
-	Segment,
-	Button,
-	Message,
-} from "semantic-ui-react";
+import { Grid, Header, Icon } from "semantic-ui-react";
+import FormField from "./form/FormField";
+import validation from "./form/validation";
 
 export default class Resgister extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			username: "",
+			email: "",
+			password: "",
+			passwordconfirm: "",
+		};
+	}
+	handleSubmit = value => {
+		alert(JSON.stringify(value, null, 2));
+	};
 	render() {
+		var { username, email, password, passwordconfirm } = this.state;
 		return (
 			<ResgisterWrapper>
 				<Grid textAlign="center" verticalAlign="middle">
@@ -21,48 +28,17 @@ export default class Resgister extends Component {
 							<Icon name="puzzle piece" color="orange" />
 							Resgister for Devchat
 						</Header>
-						<Form size="large">
-							<Segment stacked>
-								<Form.Input
-									fluid
-									icon="user"
-									placeholder="Enter your username"
-									name="username"
-									type="text"
-									iconPosition="left"
-								/>
-								<Form.Input
-									fluid
-									icon="mail"
-									placeholder="Enter your email"
-									name="email"
-									type="email"
-									iconPosition="left"
-								/>
-								<Form.Input
-									fluid
-									icon="lock"
-									placeholder="Enter your password"
-									name="password"
-									type="password"
-									iconPosition="left"
-								/>
-								<Form.Input
-									fluid
-									icon="repeat"
-									placeholder="Enter your passwordConfirm "
-									name="passwordConfirm"
-									type="password"
-									iconPosition="left"
-								/>
-								<Button fluid color="orange">
-									Submit
-								</Button>
-								<Message>
-									Already a user ? <Link to="/login">Login</Link>
-								</Message>
-							</Segment>
-						</Form>
+						<Formik
+							initialValues={{
+								username,
+								email,
+								password,
+								passwordconfirm,
+							}}
+							onSubmit={this.handleSubmit}
+							render={props => <FormField {...props} />}
+							validationSchema={validation}
+						/>
 					</Grid.Column>
 				</Grid>
 			</ResgisterWrapper>
@@ -72,4 +48,5 @@ export default class Resgister extends Component {
 
 export const ResgisterWrapper = styled.div`
 	margin-top: 60px;
+	text-align: center;
 `;

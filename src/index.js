@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./index.css";
 import "semantic-ui-css/semantic.min.css";
 import routes from "./routes";
+import AppContext from "./AppContext";
 
 class Index extends Component {
 	showRoutes = routes => {
@@ -25,11 +26,13 @@ class Index extends Component {
 	};
 	render() {
 		return (
-			<Router>
-				<div>
-					<Switch>{this.showRoutes(routes)}</Switch>
-				</div>
-			</Router>
+			<AppContext>
+				<Router>
+					<div>
+						<Switch>{this.showRoutes(routes)}</Switch>
+					</div>
+				</Router>
+			</AppContext>
 		);
 	}
 }
