@@ -1,22 +1,18 @@
-import React, { Component } from "react";
+import React, { Component, memo } from "react";
 import { Link } from "react-router-dom";
 import { Segment, Button, Message } from "semantic-ui-react";
 import { Form, Field } from "formik";
 import TextInput from "./TextInput";
 
-export default class FormField extends Component {
+class LoginField extends Component {
 	render() {
+		console.log(this.props);
 		return (
 			<Form>
 				<Segment stacked>
-					<Field
-						name="username"
-						id="username"
-						icon="user"
-						type="text"
-						placeholder="Enter your username"
-						component={TextInput}
-					/>
+					{this.props.error && (
+						<Message color="violet">{this.props.error}</Message>
+					)}
 					<Field
 						name="email"
 						id="email"
@@ -33,22 +29,21 @@ export default class FormField extends Component {
 						placeholder="Enter your password"
 						component={TextInput}
 					/>
-					<Field
-						name="passwordconfirm"
-						id="passwordconfirm"
-						icon="repeat"
-						type="password"
-						placeholder="Enter your confirmpassword"
-						component={TextInput}
-					/>
-					<Button fluid color="orange" type="submit">
+					<Button
+						loading={this.props.loading}
+						fluid
+						color="violet"
+						type="submit"
+					>
 						Submit
 					</Button>
 					<Message>
-						Already a user ? <Link to="/login">Login</Link>
+						Don't have a ccount ? <Link to="/resgister">Resgister</Link>
 					</Message>
 				</Segment>
 			</Form>
 		);
 	}
 }
+
+export default memo(LoginField);

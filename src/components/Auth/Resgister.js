@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import { Formik } from "formik";
 import styled from "styled-components";
+import md5 from "md5";
 import { Grid, Header, Icon } from "semantic-ui-react";
-import FormField from "./form/FormField";
-import validation from "./form/validation";
+import ResgisterField from "./form/ResgisterField";
+import validateRes from "./form/validateRes";
+import { auth, firestore } from "../../firebase";
+import * as Types from "../../constants/ActionTypes";
 
 export default class Resgister extends Component {
 	constructor(props) {
@@ -15,11 +18,56 @@ export default class Resgister extends Component {
 			passwordconfirm: "",
 		};
 	}
-	handleSubmit = value => {
-		alert(JSON.stringify(value, null, 2));
+	handleSubmit = (value, { resetForm }) => {
+		this.props.dispatchResLog({
+			type: Types.GET_RESLOG,
+			status: "loading",
+		});
+		auth
+			.createUserWithEmailAndPassword(value.email, value.password)
+			.then(createUser => {
+				createUser.user
+					.updateProfile({
+						displayName: value.username,
+						photoURL: `https://gravatar.com/${md5(
+							createUser.user.email
+						)}?d=identicon`,
+					})
+					.then(() => {
+						firestore
+							.collection("users")
+							.doc(createUser.user.uid)
+							.set({
+								name: createUser.user.displayName,
+								avatar: createUser.user.photoURL,
+								email: createUser.user.email,
+								uid: createUser.user.uid,
+							});
+						this.props.dispatchResLog({
+							type: Types.GET_RESLOG,
+							status: "notloading1",
+						});
+					})
+					.catch(err => console.log(err));
+			})
+			.catch(err => {
+				console.log(err);
+				this.props.dispatchResLog({
+					type: Types.GET_RESLOG,
+					payload: err,
+					status: "notloading2",
+				});
+			});
+		resetForm({
+			username: "",
+			email: "",
+			password: "",
+			passwordconfirm: "",
+		});
 	};
 	render() {
 		var { username, email, password, passwordconfirm } = this.state;
+		var { loading, error } = this.props;
 		return (
 			<ResgisterWrapper>
 				<Grid textAlign="center" verticalAlign="middle">
@@ -36,9 +84,10 @@ export default class Resgister extends Component {
 								passwordconfirm,
 							}}
 							onSubmit={this.handleSubmit}
-							render={props => <FormField {...props} />}
-							validationSchema={validation}
-						/>
+							validationSchema={validateRes}
+						>
+							{() => <ResgisterField loading={loading} error={error} />}
+						</Formik>
 					</Grid.Column>
 				</Grid>
 			</ResgisterWrapper>

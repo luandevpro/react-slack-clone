@@ -1,8 +1,10 @@
 import React, { Suspense, lazy } from "react";
 
 const App = lazy(() => import("../components/App"));
-const Login = lazy(() => import("../components/Auth/Login"));
-const Resgister = lazy(() => import("../components/Auth/Resgister"));
+const LoginContainer = lazy(() => import("../containers/LoginContainer"));
+const ResgisterContainer = lazy(() =>
+	import("../containers/ResgisterContainer")
+);
 
 const routes = [
 	{
@@ -17,18 +19,18 @@ const routes = [
 	{
 		path: "/login",
 		exact: false,
-		main: () => (
+		main: ({ history }) => (
 			<Suspense fallback={<div>loading...</div>}>
-				<Login />
+				<LoginContainer history={history} />
 			</Suspense>
 		),
 	},
 	{
 		path: "/resgister",
 		exact: false,
-		main: () => (
+		main: ({ history }) => (
 			<Suspense fallback={<div>loading...</div>}>
-				<Resgister />
+				<ResgisterContainer history={history} />
 			</Suspense>
 		),
 	},

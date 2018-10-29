@@ -27,13 +27,16 @@ class Index extends Component {
 	render() {
 		return (
 			<AppContext>
-				<Router>
-					<div>
-						<Switch>{this.showRoutes(routes)}</Switch>
-					</div>
-				</Router>
+				<div>
+					<Switch>{this.showRoutes(routes)}</Switch>
+				</div>
 			</AppContext>
 		);
 	}
 }
-ReactDOM.render(<Index />, document.getElementById("root"));
+ReactDOM.render(
+	<Router>
+		<Index />
+	</Router>,
+	document.getElementById("root")
+);

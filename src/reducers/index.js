@@ -1,3 +1,3 @@
-import display from "./display";
+import reslog from "./reslog";
 
-export { display };
+export { reslog };
